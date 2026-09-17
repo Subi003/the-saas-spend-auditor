@@ -9,7 +9,8 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
-from .config import METRICS, SUBSCRIPTIONS
+# Demo audit values live in data.py, not config.py.
+from .data import METRICS, SUBSCRIPTIONS
 
 
 def build_audit_pdf() -> bytes:
@@ -39,7 +40,11 @@ def build_audit_pdf() -> bytes:
         ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#f4f7fb")]),
         ("PADDING", (0, 0), (-1, -1), 8),
     ]))
-    story.extend([summary_table, Spacer(1, 0.3 * inch), Paragraph("Detected subscriptions", styles["Heading2"])])
+    story.extend([
+        summary_table,
+        Spacer(1, 0.3 * inch),
+        Paragraph("Detected subscriptions", styles["Heading2"]),
+    ])
 
     subscriptions = [["Product", "Category", "Monthly", "Status", "Renewal"]]
     for subscription in SUBSCRIPTIONS:
@@ -50,7 +55,12 @@ def build_audit_pdf() -> bytes:
             subscription.status,
             f"{subscription.renewal_days} days",
         ])
-    subscription_table = Table(subscriptions, repeatRows=1, colWidths=[1.8 * inch, 1.25 * inch, 0.8 * inch, 0.85 * inch, 0.8 * inch])
+
+    subscription_table = Table(
+        subscriptions,
+        repeatRows=1,
+        colWidths=[1.8 * inch, 1.25 * inch, 0.8 * inch, 0.85 * inch, 0.8 * inch],
+    )
     subscription_table.setStyle(TableStyle([
         ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#071426")),
         ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
@@ -60,6 +70,9 @@ def build_audit_pdf() -> bytes:
         ("FONTSIZE", (0, 0), (-1, -1), 8),
     ]))
     story.append(subscription_table)
-    story.extend([Spacer(1, 0.25 * inch), Paragraph("Estimated annualized savings: $28,080", styles["Heading2"])])
+    story.extend([
+        Spacer(1, 0.25 * inch),
+        Paragraph("Estimated annualized savings: $28,080", styles["Heading2"]),
+    ])
     document.build(story)
     return buffer.getvalue()
