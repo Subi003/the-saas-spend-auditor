@@ -5,9 +5,10 @@ import time
 import pandas as pd
 import streamlit as st
 
-from .components import alert_card, inject_css, metric_card, status_badge
-from .config import ALERTS, APP_NAME, APP_SUBTITLE, CATEGORY_SPEND, METRICS, SUBSCRIPTIONS
-from .data import build_audit_pdf
+from .components import alert_card, inject_css, metric_card
+from .config import APP_NAME, APP_SUBTITLE
+from .data import ALERTS, CATEGORY_SPEND, METRICS, SUBSCRIPTIONS
+from .report import build_audit_pdf
 
 
 def render_landing() -> None:
